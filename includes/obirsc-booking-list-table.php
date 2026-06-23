@@ -2,7 +2,7 @@
 /**
  * Booking List Table Class
  *
- * @package ObydullahRestaurantShopCore
+ * @package Obydullah_Restaurant_Shop_Core
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

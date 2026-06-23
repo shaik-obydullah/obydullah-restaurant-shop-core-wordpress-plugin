@@ -3,7 +3,7 @@
  * Plugin Name: Obydullah Restaurant Shop Core
  * Plugin URI: https://obydullah.com/project/obydullah-restaurant-shop-core
  * Description: Core functionality for Obydullah Restaurant theme with WooCommerce integration for menu items and chef's specials.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      Shaik Obydullah
  * Author URI:  https://obydullah.com
  * License:     GPL v2 or later
@@ -18,13 +18,13 @@
  * 2. Hero Slider CPT + Meta Boxes
  * 3. Chef's Special CPT + Meta Boxes (Single Instance) + WooCommerce
  * 4. Menu Items CPT + Category Taxonomy + Meta Boxes + WooCommerce
- * 5. Menu Area (single instance) + Meta Boxes
+ * 5. Menu Area (Single Instance) + Meta Boxes
  * 6. Testimonials CPT + Meta Boxes
- * 7. Testimonial Area (single instance)
- * 8. Opening Hours CPT (single instance) + Repeater Hours
- * 9. Table Reservations (custom DB table, AJAX handler, admin list)
- * 10. Footer Settings (single instance) + Meta Boxes
- * 11. About Page (single instance) + Meta Boxes (story, philosophy, slider)
+ * 7. Testimonial Area (Single Instance)
+ * 8. Opening Hours CPT (Single Instance) + Repeater Hours
+ * 9. Table Reservations (Custom DB Table, AJAX Handler, Admin List)
+ * 10. Footer Settings (Single Instance) + Meta Boxes
+ * 11. About Page (Single Instance) + Meta Boxes (Story, Philosophy, Slider)
  * 12. Contact Page
  * 13. Contact Form 7 Support
  * 14. WooCommerce Integration - Display Functions
@@ -213,9 +213,9 @@ function obirsc_save_hero_slide_meta( $post_id ) {
 add_action( 'save_post_obirsc_hero_slide', 'obirsc_save_hero_slide_meta' );
 
 
-/* ======================================================
+/* ====================================================================
    3. Chef's Special CPT + Meta Boxes (Single Instance) + WooCommerce
-====================================================== */
+======================================================================= */
 
 function obirsc_register_chef_special_cpt() {
     register_post_type( 'obirsc_chef_special', array(
@@ -377,9 +377,9 @@ function obirsc_save_chef_special_meta( $post_id ) {
 }
 add_action( 'save_post_obirsc_chef_special', 'obirsc_save_chef_special_meta' );
 
-/* ======================================================
+/* ====================================================================
    4. Menu Items CPT + Category Taxonomy + Meta Boxes + WooCommerce
-====================================================== */
+======================================================================= */
 
 function obirsc_register_menu_item() {
     register_post_type( 'obirsc_menu_item', array(
@@ -711,7 +711,6 @@ function obirsc_register_testimonial_area() {
 }
 add_action( 'init', 'obirsc_register_testimonial_area' );
 
-
 function obirsc_limit_testimonial_area() {
     global $pagenow;
 if ( $pagenow === 'post-new.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] === 'obirsc_testi_area' ) {
@@ -937,7 +936,6 @@ function obirsc_drop_booking_table() {
     $wpdb->query( "DROP TABLE IF EXISTS $table_name" );
 }
 register_uninstall_hook( __FILE__, 'obirsc_drop_booking_table' );
-
 
 function obirsc_handle_booking_submission() {
     if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'obirsc_booking_nonce' ) ) {
@@ -1697,9 +1695,9 @@ function obirsc_get_first_cf7_shortcode() {
 }
 
 
-/* ======================================================
+/* ===========================================================
    14. WOOCOMMERCE INTEGRATION - Get Product Data for Display
-====================================================== */
+============================================================== */
 
 function obirsc_get_woo_product_data( $post_id ) {
     $woo_product_id = get_post_meta( $post_id, '_obirsc_woo_product_id', true );
