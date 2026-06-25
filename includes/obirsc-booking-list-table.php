@@ -3,6 +3,8 @@
  * Booking List Table Class
  *
  * @package Obydullah_Restaurant_Shop_Core
+ * @since   1.0.0
+ * @author  Shaik Obydullah
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

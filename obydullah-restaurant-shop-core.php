@@ -3,7 +3,7 @@
  * Plugin Name: Obydullah Restaurant Shop Core
  * Plugin URI: https://obydullah.com/project/obydullah-restaurant-shop-core
  * Description: Core functionality for Obydullah Restaurant theme with WooCommerce integration for menu items and chef's specials.
- * Version:     1.0.1
+ * Version:     1.0.2
  * Author:      Shaik Obydullah
  * Author URI:  https://obydullah.com
  * License:     GPL v2 or later
@@ -11,31 +11,31 @@
  * Text Domain: obydullah-restaurant-shop-core
  * Domain Path: /languages
  *
- * ================================================================
+ * ====================================================================================
  *                         INDEX
- * ================================================================
+ * ====================================================================================
  * 1. Security & Constants
  * 2. Hero Slider CPT + Meta Boxes
  * 3. Chef's Special CPT + Meta Boxes (Single Instance) + WooCommerce
- * 4. Menu Items CPT + Category Taxonomy + Meta Boxes + WooCommerce
- * 5. Menu Area (single instance) + Meta Boxes
+ * 4. Menu Items CPT + Category Taxonomy + Product Link Meta Box
+ * 5. Menu Area (Single Instance) + Meta Boxes
  * 6. Testimonials CPT + Meta Boxes
- * 7. Testimonial Area (single instance)
- * 8. Opening Hours CPT (single instance) + Repeater Hours
- * 9. Table Reservations (custom DB table, AJAX handler, admin list)
- * 10. Footer Settings (single instance) + Meta Boxes
- * 11. About Page (single instance) + Meta Boxes (story, philosophy, slider)
+ * 7. Testimonial Area (Single Instance)
+ * 8. Opening Hours CPT (Single Instance) + Repeater Hours
+ * 9. Table Reservations (Custom DB Table, AJAX Handler, Admin List)
+ * 10. Footer Settings (Single Instance) + Meta Boxes
+ * 11. About Page (Single Instance) + Meta Boxes (Story, Philosophy, Slider)
  * 12. Contact Page
  * 13. Contact Form 7 Support
  * 14. WooCommerce Integration - Display Functions
- * ================================================================
+ * =====================================================================================
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'OBIRSC_VERSION', '1.0.1' );
+define( 'OBIRSC_VERSION', '1.0.2' );
 define( 'OBIRSC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'OBIRSC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -213,9 +213,9 @@ function obirsc_save_hero_slide_meta( $post_id ) {
 add_action( 'save_post_obirsc_hero_slide', 'obirsc_save_hero_slide_meta' );
 
 
-/* ======================================================
+/* ======================================================================
    3. Chef's Special CPT + Meta Boxes (Single Instance) + WooCommerce
-====================================================== */
+========================================================================= */
 
 function obirsc_register_chef_special_cpt() {
     register_post_type( 'obirsc_chef_special', array(
@@ -230,7 +230,7 @@ function obirsc_register_chef_special_cpt() {
         'show_ui'         => true,
         'show_in_menu'    => 'obirsc-restaurant-core',
         'menu_icon'       => 'dashicons-media-text',
-        'supports'        => array( 'title', 'thumbnail' ),
+        'supports'        => array( 'title' ),
         'show_in_rest'    => true,
         'capability_type' => 'post',
         'map_meta_cap'    => true,
@@ -377,23 +377,26 @@ function obirsc_save_chef_special_meta( $post_id ) {
 }
 add_action( 'save_post_obirsc_chef_special', 'obirsc_save_chef_special_meta' );
 
-/* ======================================================
-   4. Menu Items CPT + Category Taxonomy + Meta Boxes + WooCommerce
-====================================================== */
+
+/* ===================================================================
+   4. Menu Items CPT + Category Taxonomy + Product Link Meta Box
+====================================================================== */
 
 function obirsc_register_menu_item() {
     register_post_type( 'obirsc_menu_item', array(
-          'labels'      => array(
+        'labels' => array(
             'name'          => __( 'Menu Items', 'obydullah-restaurant-shop-core' ),
             'singular_name' => __( 'Menu Item', 'obydullah-restaurant-shop-core' ),
             'add_new_item'  => __( 'Add New Menu Item', 'obydullah-restaurant-shop-core' ),
             'edit_item'     => __( 'Edit Menu Item', 'obydullah-restaurant-shop-core' ),
         ),
-        'public'      => true,
-        'show_in_menu'        => 'obirsc-restaurant-core',
-        'menu_icon'   => 'dashicons-food',
-        'supports'    => array( 'title', 'thumbnail' ),
-        'show_in_rest'=> true,
+        'public'          => true,
+        'show_in_menu'    => 'obirsc-restaurant-core',
+        'menu_icon'       => 'dashicons-food',
+        'supports'        => array( 'title' ),
+        'show_in_rest'    => true,
+        'capability_type' => 'post',
+        'map_meta_cap'    => true,
     ) );
 }
 add_action( 'init', 'obirsc_register_menu_item' );
@@ -414,30 +417,27 @@ function obirsc_register_menu_category() {
 }
 add_action( 'init', 'obirsc_register_menu_category' );
 
-function obirsc_add_menu_item_subtitle_meta_box() {
-    add_meta_box( 'obirsc_menu_item_subtitle', __( 'Subtitle', 'obydullah-restaurant-shop-core' ), 'obirsc_subtitle_callback', 'obirsc_menu_item', 'normal', 'high' );
+/**
+ * Meta box – WooCommerce product dropdown.
+ */
+function obirsc_add_menu_item_meta_box() {
+    add_meta_box(
+        'obirsc_menu_item_product',
+        __( 'Linked Product', 'obydullah-restaurant-shop-core' ),
+        'obirsc_menu_item_meta_callback',
+        'obirsc_menu_item',
+        'normal',
+        'high'
+    );
 }
-add_action( 'add_meta_boxes', 'obirsc_add_menu_item_subtitle_meta_box' );
+add_action( 'add_meta_boxes', 'obirsc_add_menu_item_meta_box' );
 
-function obirsc_subtitle_callback( $post ) {
-    wp_nonce_field( 'obirsc_menu_item_meta', 'obirsc_menu_item_nonce' );
-    $subtitle = get_post_meta( $post->ID, 'obirsc_menu_subtitle', true );
-    echo '<textarea name="obirsc_menu_subtitle" rows="2" class="large-text">' . esc_textarea( $subtitle ) . '</textarea>';
-}
-
-function obirsc_add_price_meta_box() {
-    add_meta_box( 'obirsc_menu_price', __( 'Price & WooCommerce', 'obydullah-restaurant-shop-core' ), 'obirsc_price_callback', 'obirsc_menu_item', 'side', 'default' );
-}
-add_action( 'add_meta_boxes', 'obirsc_add_price_meta_box' );
-
-
-function obirsc_price_callback( $post ) {
+function obirsc_menu_item_meta_callback( $post ) {
     wp_nonce_field( 'obirsc_menu_item_meta', 'obirsc_menu_item_nonce' );
 
-    $price          = get_post_meta( $post->ID, 'obirsc_menu_price', true );
     $woo_product_id = get_post_meta( $post->ID, '_obirsc_woo_product_id', true );
 
-    // Build product list for WooCommerce dropdown
+    // Build product list
     $products = array();
     if ( class_exists( 'WooCommerce' ) ) {
         $product_query = get_posts( array(
@@ -451,28 +451,17 @@ function obirsc_price_callback( $post ) {
         foreach ( $product_query as $product_post ) {
             $product = wc_get_product( $product_post->ID );
             if ( $product ) {
-                 $clean_price = wp_strip_all_tags( wc_price( $product->get_price() ) );
+                $clean_price = wp_strip_all_tags( wc_price( $product->get_price() ) );
                 $products[ $product_post->ID ] = $product_post->post_title . ' (' . $clean_price . ')';
             }
         }
     }
     ?>
 
-<!-- Price Field -->
-<p>
-    <label for="obirsc_menu_price">
-        <strong><?php esc_html_e( 'Price', 'obydullah-restaurant-shop-core' ); ?></strong>
-    </label><br>
-    <input type="text" name="obirsc_menu_price" id="obirsc_menu_price" value="<?php echo esc_attr( $price ); ?>"
-        class="widefat" placeholder="<?php esc_attr_e( '$48', 'obydullah-restaurant-shop-core' ); ?>">
-</p>
-
 <?php if ( class_exists( 'WooCommerce' ) && ! empty( $products ) ) : ?>
-<hr>
-<h3><?php esc_html_e( 'WooCommerce Product Link', 'obydullah-restaurant-shop-core' ); ?></h3>
 <p>
     <label for="obirsc_woo_product_id">
-        <strong><?php esc_html_e( 'Link to WooCommerce Product', 'obydullah-restaurant-shop-core' ); ?></strong>
+        <strong><?php esc_html_e( 'Select a WooCommerce Product', 'obydullah-restaurant-shop-core' ); ?></strong>
     </label><br>
     <select name="obirsc_woo_product_id" id="obirsc_woo_product_id" class="widefat">
         <option value="">
@@ -485,7 +474,7 @@ function obirsc_price_callback( $post ) {
         <?php endforeach; ?>
     </select>
     <span class="description">
-        <?php esc_html_e( 'Select a WooCommerce product to link this menu item.', 'obydullah-restaurant-shop-core' ); ?>
+        <?php esc_html_e( 'The menu item will display data from the linked product (title, price, image, description).', 'obydullah-restaurant-shop-core' ); ?>
     </span>
 </p>
 <?php else : ?>
@@ -497,6 +486,9 @@ function obirsc_price_callback( $post ) {
 <?php
 }
 
+/**
+ * Save only the product link.
+ */
 function obirsc_save_menu_item_meta( $post_id ) {
     if ( ! isset( $_POST['obirsc_menu_item_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['obirsc_menu_item_nonce'] ) ), 'obirsc_menu_item_meta' ) ) {
         return;
@@ -510,19 +502,13 @@ function obirsc_save_menu_item_meta( $post_id ) {
     if ( 'obirsc_menu_item' !== get_post_type( $post_id ) ) {
         return;
     }
-    if ( isset( $_POST['obirsc_menu_subtitle'] ) ) {
-        update_post_meta( $post_id, 'obirsc_menu_subtitle', sanitize_textarea_field( wp_unslash( $_POST['obirsc_menu_subtitle'] ) ) );
-    }
-    if ( isset( $_POST['obirsc_menu_price'] ) ) {
-        update_post_meta( $post_id, 'obirsc_menu_price', sanitize_text_field( wp_unslash( $_POST['obirsc_menu_price'] ) ) );
-    }
-    // Save WooCommerce product link
+
+    // Save the product ID
     if ( isset( $_POST['obirsc_woo_product_id'] ) ) {
         update_post_meta( $post_id, '_obirsc_woo_product_id', intval( $_POST['obirsc_woo_product_id'] ) );
     }
 }
 add_action( 'save_post_obirsc_menu_item', 'obirsc_save_menu_item_meta' );
-
 
 /* ======================================================
    5. Menu Area (Single Instance) + Meta Boxes
@@ -540,7 +526,7 @@ function obirsc_register_menu_area() {
         'show_ui'          => true,
         'show_in_menu'     => 'obirsc-restaurant-core',
         'menu_icon'        => 'dashicons-menu',
-        'supports'         => array( 'title', 'thumbnail' ),
+        'supports'         => array( 'title', ),
         'show_in_rest'     => true,
         'capability_type'  => 'post',
         'map_meta_cap'     => true,
@@ -1395,7 +1381,6 @@ function obirsc_about_text_callback( $post ) {
 <?php
 }
 
-
 function obirsc_about_slider_callback( $post ) {
 
     $slides = get_post_meta( $post->ID, 'obirsc_about_slides', true );
@@ -1697,9 +1682,9 @@ function obirsc_get_first_cf7_shortcode() {
 }
 
 
-/* ======================================================
+/* ===============================================================
    14. WOOCOMMERCE INTEGRATION - Get Product Data for Display
-====================================================== */
+================================================================== */
 
 function obirsc_get_woo_product_data( $post_id ) {
     $woo_product_id = get_post_meta( $post_id, '_obirsc_woo_product_id', true );

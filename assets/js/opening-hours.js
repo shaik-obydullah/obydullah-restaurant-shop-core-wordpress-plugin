@@ -8,26 +8,26 @@
  * Handles the opening hours repeater:
  * - Add new hour rows
  * - Remove existing rows
- * Uses localised strings from obirc_opening_hours.
+ * Uses localised strings from obirsc_opening_hours.
  */
 
 jQuery(document).ready(function ($) {
-  $("#obirc-add-hours-row").on("click", function () {
+  $("#obirsc-add-hours-row").on("click", function () {
     var newRow =
-      '<div class="obirc-hours-row">' +
-      '<input type="text" name="obirc_hours_day[]" class="obirc-hours-day" placeholder="' +
-      obirc_opening_hours.dayPlaceholder +
+      '<div class="obirsc-hours-row">' +
+      '<input type="text" name="obirsc_hours_day[]" class="obirsc-hours-day" placeholder="' +
+      obirsc_opening_hours.dayPlaceholder +
       '">' +
-      '<input type="text" name="obirc_hours_time[]" class="obirc-hours-time" placeholder="' +
-      obirc_opening_hours.timePlaceholder +
+      '<input type="text" name="obirsc_hours_time[]" class="obirsc-hours-time" placeholder="' +
+      obirsc_opening_hours.timePlaceholder +
       '">' +
-      '<button type="button" class="button obirc-remove-row">' +
-      obirc_opening_hours.removeText +
+      '<button type="button" class="button obirsc-remove-row">' +
+      obirsc_opening_hours.removeText +
       "</button>" +
       "</div>";
-    $("#obirc-hours-repeater").append(newRow);
+    $("#obirsc-hours-repeater").append(newRow);
   });
-  $(document).on("click", ".obirc-remove-row", function () {
-    $(this).closest(".obirc-hours-row").remove();
+  $(document).on("click", ".obirsc-remove-row", function () {
+    $(this).closest(".obirsc-hours-row").remove();
   });
 });

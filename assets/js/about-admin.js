@@ -13,56 +13,56 @@
  */
 
 jQuery(document).ready(function ($) {
-  var slideCounter = parseInt($("#obirc-about-slide-count").val()) || 0;
+  var slideCounter = parseInt($("#obirsc-about-slide-count").val()) || 0;
 
-  $("#obirc-add-about-slide").on("click", function () {
+  $("#obirsc-add-about-slide").on("click", function () {
     var newIndex = slideCounter;
     var newRow = `
-      <div class="obirc-slide-row" data-index="${newIndex}">
+      <div class="obirsc-slide-row" data-index="${newIndex}">
         <p>
-          <label>${obircAboutL10n.titlePlaceholder}</label><br>
-          <input type="text" name="obirc_about_slides[${newIndex}][title]" class="widefat">
+          <label>${obirscAboutL10n.titlePlaceholder}</label><br>
+          <input type="text" name="obirsc_about_slides[${newIndex}][title]" class="widefat">
         </p>
         <p>
-          <label>${obircAboutL10n.subtitlePlaceholder}</label><br>
-          <input type="text" name="obirc_about_slides[${newIndex}][subtitle]" class="widefat">
+          <label>${obirscAboutL10n.subtitlePlaceholder}</label><br>
+          <input type="text" name="obirsc_about_slides[${newIndex}][subtitle]" class="widefat">
         </p>
         <div class="slide-image-wrapper">
-          <label>${obircAboutL10n.imagePlaceholder}</label><br>
-          <input type="hidden" name="obirc_about_slides[${newIndex}][image]" class="slide-image-url">
+          <label>${obirscAboutL10n.imagePlaceholder}</label><br>
+          <input type="hidden" name="obirsc_about_slides[${newIndex}][image]" class="slide-image-url">
           <div class="image-preview"></div>
-          <button type="button" class="button select-slide-image">${obircAboutL10n.selectImage}</button>
-          <button type="button" class="button remove-slide-image hidden">${obircAboutL10n.removeImage}</button>
+          <button type="button" class="button select-slide-image">${obirscAboutL10n.selectImage}</button>
+          <button type="button" class="button remove-slide-image hidden">${obirscAboutL10n.removeImage}</button>
         </div>
-        <button type="button" class="button obirc-remove-slide-row">${obircAboutL10n.removeText}</button>
+        <button type="button" class="button obirsc-remove-slide-row">${obirscAboutL10n.removeText}</button>
       </div>
     `;
-    $("#obirc-about-slides-repeater").append(newRow);
+    $("#obirsc-about-slides-repeater").append(newRow);
     slideCounter++;
-    $("#obirc-about-slide-count").val(slideCounter);
+    $("#obirsc-about-slide-count").val(slideCounter);
   });
 
-  $(document).on("click", ".obirc-remove-slide-row", function () {
-    $(this).closest(".obirc-slide-row").remove();
+  $(document).on("click", ".obirsc-remove-slide-row", function () {
+    $(this).closest(".obirsc-slide-row").remove();
     reindexSlides();
   });
 
   function reindexSlides() {
     var newCounter = 0;
-    $("#obirc-about-slides-repeater .obirc-slide-row").each(function (index) {
+    $("#obirsc-about-slides-repeater .obirsc-slide-row").each(function (index) {
       $(this).attr("data-index", index);
       $(this)
         .find('input[name*="[title]"]')
-        .attr("name", "obirc_about_slides[" + index + "][title]");
+        .attr("name", "obirsc_about_slides[" + index + "][title]");
       $(this)
         .find('input[name*="[subtitle]"]')
-        .attr("name", "obirc_about_slides[" + index + "][subtitle]");
+        .attr("name", "obirsc_about_slides[" + index + "][subtitle]");
       $(this)
         .find('input[name*="[image]"]')
-        .attr("name", "obirc_about_slides[" + index + "][image]");
+        .attr("name", "obirsc_about_slides[" + index + "][image]");
       newCounter = index + 1;
     });
-    $("#obirc-about-slide-count").val(newCounter);
+    $("#obirsc-about-slide-count").val(newCounter);
     slideCounter = newCounter;
   }
 
@@ -72,8 +72,8 @@ jQuery(document).ready(function ($) {
     var wrapper = button.closest(".slide-image-wrapper");
 
     var frame = wp.media({
-      title: obircAboutL10n.selectImage,
-      button: { text: obircAboutL10n.selectImage },
+      title: obirscAboutL10n.selectImage,
+      button: { text: obirscAboutL10n.selectImage },
       multiple: false,
     });
 

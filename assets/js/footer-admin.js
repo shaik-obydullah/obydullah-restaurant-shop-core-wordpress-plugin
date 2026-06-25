@@ -8,38 +8,38 @@
  * Handles the footer quick links repeater:
  * - Add new link rows
  * - Remove existing rows
- * Uses localised strings from obircFooterL10n.
+ * Uses localised strings from obirscFooterL10n.
  */
 
 jQuery(document).ready(function ($) {
   // Add new link row using the hidden counter
-  $("#obirc-add-footer-link").on("click", function () {
-    var counter = $("#obirc-footer-link-count");
+  $("#obirsc-add-footer-link").on("click", function () {
+    var counter = $("#obirsc-footer-link-count");
     var newIndex = parseInt(counter.val());
     var newRow =
-      '<div class="obirc-footer-link-row obirc-repeater-row" data-index="' +
+      '<div class="obirsc-footer-link-row obirsc-repeater-row" data-index="' +
       newIndex +
       '">' +
-      '<input type="text" name="obirc_footer_links[' +
+      '<input type="text" name="obirsc_footer_links[' +
       newIndex +
-      '][text]" class="obirc-link-text" placeholder="' +
-      obircFooterL10n.linkTextPlaceholder +
+      '][text]" class="obirsc-link-text" placeholder="' +
+      obirscFooterL10n.linkTextPlaceholder +
       '">' +
-      '<input type="text" name="obirc_footer_links[' +
+      '<input type="text" name="obirsc_footer_links[' +
       newIndex +
-      '][url]" class="obirc-link-url" placeholder="' +
-      obircFooterL10n.urlPlaceholder +
+      '][url]" class="obirsc-link-url" placeholder="' +
+      obirscFooterL10n.urlPlaceholder +
       '">' +
-      '<button type="button" class="button obirc-remove-row">' +
-      obircFooterL10n.removeText +
+      '<button type="button" class="button obirsc-remove-row">' +
+      obirscFooterL10n.removeText +
       "</button>" +
       "</div>";
-    $("#obirc-footer-links-repeater").append(newRow);
+    $("#obirsc-footer-links-repeater").append(newRow);
     counter.val(newIndex + 1);
   });
 
   // Remove row
-  $(document).on("click", ".obirc-remove-row", function () {
-    $(this).closest(".obirc-footer-link-row").remove();
+  $(document).on("click", ".obirsc-remove-row", function () {
+    $(this).closest(".obirsc-footer-link-row").remove();
   });
 });
